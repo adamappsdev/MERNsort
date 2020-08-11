@@ -1,0 +1,46 @@
+@import url("https://fonts.googleapis.com/css2?family=Kalam");
+body {
+  font-family: "Kalam", cursive;
+  color: navy;
+  font-size: 1.2em;
+  background-color: ghostwhite;
+  background-size: 100% 1.2em;
+  background-image: linear-gradient(0deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px), linear-gradient(#eee 0.05em, transparent 0.05em);
+  behavior: url(/PIE.htc);
+  margin: 60px;
+}
+
+nav {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  height: 100px;
+  border-bottom: 1px solid #bbb;
+  margin-bottom: 20px;
+}
+nav .nav-left a {
+  color: navy;
+  font-size: 2em;
+}
+nav .nav-right a {
+  color: crimson;
+  text-decoration: none;
+  margin-left: 40px;
+  font-size: 1.5em;
+}
+
+#sectionLeft {
+  float: left;
+  width: 49%;
+  border-right: 1px solid #bbb;
+}
+
+#sectionRight {
+  float: right;
+  width: 49%;
+}
+#sectionRight svg {
+  width: 100%;
+}
+
+/*# sourceMappingURL=index.css.map */

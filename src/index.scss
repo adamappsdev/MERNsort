@@ -1,0 +1,55 @@
+@mixin google-font($family) {
+    @import url("https://fonts.googleapis.com/css2?family=Kalam");
+}
+
+@include google-font("Kalam");
+
+$primary-text-color: navy;
+$secondary-text-color: crimson;
+
+body {
+    font-family: 'Kalam', cursive;
+    color: $primary-text-color;
+    font-size: 1.2em;
+    background-color: ghostwhite;
+    background-size: 100% 1.2em;
+    $background-image-one: linear-gradient(0deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px), linear-gradient(#eee .05em, transparent .05em);
+    background-image: $background-image-one; //radial-gradient(circle, #ccc 1px, rgba(0, 0, 0, 0) 1px);
+    /// background-size: 30px 30px;
+    // -pie-background: linear-gradient(0deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px) 0 0 / 100% 1.2em, linear-gradient(#eee .05em, transparent .05em) 0 0 / 100% 1.2em #fff;
+    behavior: url(/PIE.htc);
+    margin: 60px;
+}
+
+nav {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    height: 100px;
+    .nav-left a {
+        color: $primary-text-color;
+        font-size: 2em;
+    }
+    .nav-right a {
+        color: $secondary-text-color;
+        text-decoration: none;
+        margin-left: 40px;
+        font-size: 1.5em;
+    }
+    border-bottom: 1px solid #bbb;
+    margin-bottom: 20px;
+}
+
+#sectionLeft {
+    float: left;
+    width: 49%;
+    border-right: 1px solid #bbb;
+}
+
+#sectionRight {
+    float: right;
+    width: 49%;
+    svg {
+        width: 100%;
+    }
+}
