@@ -7,53 +7,44 @@ import Chart from "./components/Chart";
 class App extends React.Component {
   constructor (props) {
     super(props);
-  }
-  
-  handleClick = () => {
-    this.arrayFiddler.randomizeArray();
-  }
-
-  playAlgo = () => {
-    this.arrayFiddler.playAlgo();
+    this.state = {
+      selectedAlgo: "heap",
+      bars: 11,
+      velocity: 200
+    }
   }
 
-  pauseAlgo = () => {
-    this.arrayFiddler.pauseAlgo()
+  randomizeArray = (event) => {
+    this.arrayFiddler.handleBarChange(event);
+    this.setState({ bars: event })
   }
 
-  handleBubblesort = () => {
-    this.arrayFiddler.sortBubblesort();
-  } 
-
-  handleHeapsort = () => {
-    this.arrayFiddler.sortHeapsort();
-  }
-  
-  handleMergesort = () => {
-    this.arrayFiddler.sortMergesort();
-  }
-
-  handleInsertionsort = () => {
-    this.arrayFiddler.sortInsertionsort();
+  getVelocity = (event) => {
+    this.arrayFiddler.changeVelocity(event);
+    this.setState({ velocity: event })
   }
 
   render() {
     return (
-      <div>
+      <>
         <Header />
         <Dashboard
-          onRandomize={ this.handleClick.bind(this) }
-          bubbleSort={ this.handleBubblesort.bind(this) }
-          mergeSort={ this.handleMergesort.bind(this) }
-          heapSort={ this.handleHeapsort.bind(this) }
-          insertionSort={ this.handleInsertionsort.bind(this) }
-          playAlgo={ this.playAlgo.bind(this) }
-          pauseAlgo={ this.pauseAlgo.bind(this) }
+          onRandomize={ () => this.arrayFiddler.randomizeArray() }
+          selectedAlgo={ event => this.setState({ selectedAlgo: event }) }
+          runAlgo={ () => this.arrayFiddler.runAlgo() }
+          pauseAlgo={ () => this.arrayFiddler.pauseAlgo() }
+          handleBarData={ this.randomizeArray }
+          handleVelocityData={ this.getVelocity }
         />
-        <Chart ref={ arrayFiddler => this.arrayFiddler = arrayFiddler }/>
-      </div>
+        <Chart 
+          ref={ arrayFiddler => this.arrayFiddler = arrayFiddler }
+          selectedAlgo={ this.state.selectedAlgo }
+          bars={ this.state.bars }
+          velocity={ this.state.velocity }
+        />
+      </>
     )
-  };
+  }
 }
 
 export default App;

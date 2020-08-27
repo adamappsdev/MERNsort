@@ -1,34 +1,79 @@
-import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react';
+import React from 'react';
 import { RoughProvider, Rectangle } from 'react-roughjs';
+import Dashboard from "./Dashboard";
+
 
 class Chart extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            arrayBars: []
+            arrayBars: [],
+            bars: this.props.bars,
+            velocity: this.props.velocity
         }
-        this.array = [] //[0.5, 0.4, 0.3, 0.2, 0.1]; // actual array of actual values
+        this.array = []; //[0.5, 0.4, 0.3, 0.2, 0.1]; // actual array of actual values
         this.arraySVG = []; // SVG array of each bar
-        this.bars = 25;
-        this.velocity = 100;
         this.finished = false;
         this.inProgress = false;
         this.stopped = false;
         this.instructions = [];
+        this.createGraph = this.createGraph.bind(this);
     }
 
-    playAlgo() {
-        // tbd
+    runAlgo() {
+        switch(this.props.selectedAlgo) {
+            case "heap": // heap
+                this.sortHeapsort();
+                break;
+            case "merge": // merge
+                this.sortMergesort();
+                break;
+            case "insertion": // insertion
+                this.sortInsertionsort();
+                break;
+            case "bubble": // bubble
+                this.sortBubblesort();
+                break;
+            default:
+                alert("Error. No such algorithm found.");
+                break;
+        }
     }
 
-    pauseAlgo() {
+    changeVelocity(event) {
+        this.setState({ velocity: event })
+    }
+
+    handleBarChange(event) {
+        if (this.inProgress === true && this.finished === false){
+            return;
+        } else {
+            this.setState(
+                { bars: event },
+                () => { 
+                    this.array = [];
+                    let shuffledArray = [];
+                    for (let i = 0; i < this.state.bars; i++) {
+                        shuffledArray.push(i); // creates an array
+                    }
+                    for (let i = 0; i < this.state.bars; i++) {
+                        this.array.push(Math.random());
+                    }
+                    this.createGraph(this.array, this.state.bars);
+                    this.finished = false;
+                    this.stopped = false;
+                }
+            );
+        }
+    }
+
+    pauseAlgo() { // needs work
         this.finished = false;
         this.inProgress = false;
         this.stopped = true;
         clearInterval(this.intervalHighligher);
         clearInterval(this.intervalSwapper);
-        this.createGraph(this.array, this.bars, { fill: 'black', fillStyle: 'cross-hatch', bowing: 4 });
+        this.createGraph(this.array, this.state.bars, { fill: 'black', fillStyle: 'cross-hatch', bowing: 4 });
     }
 
     createBar(i, arrayValue, barsLength, options) {
@@ -38,7 +83,7 @@ class Chart extends React.Component {
         return (
             <Rectangle 
                 key={ i }
-                x={ 1.1 + i * ( allotedWidth - 2.2 ) } 
+                x={ 1.1 + i * allotedWidth } 
                 y={ clientHeight - ( clientHeight * arrayValue ) } 
                 width={ allotedWidth - 7 } 
                 height={ ( clientHeight - 5 ) * arrayValue } 
@@ -66,11 +111,11 @@ class Chart extends React.Component {
 
     highlightElements(array, options={ fill: 'yellow' }) { // highlighter
         this.arraySVG = [];
-        for (let i = 0; i < this.bars; i++) {
-            if (array.includes(i) == true) {
-                this.arraySVG.push( this.createBar(i, this.array[i], this.bars, options ));
+        for (let i = 0; i < this.state.bars; i++) {
+            if (array.includes(i) === true) {
+                this.arraySVG.push( this.createBar(i, this.array[i], this.state.bars, options ));
             } else {
-                this.arraySVG.push( this.createBar(i, this.array[i], this.bars, { fill: 'red' } ));
+                this.arraySVG.push( this.createBar(i, this.array[i], this.state.bars, { fill: 'red' } ));
             }
         }
         this.setState({ arrayBars: this.arraySVG });
@@ -78,13 +123,13 @@ class Chart extends React.Component {
 
     highlightElementsSpecial(array, key, options={ fill: 'yellow' }) { // highlighter
         this.arraySVG = [];
-        for (let i = 0; i < this.bars; i++) {
-            if (array.includes(i) == true) {
-                this.arraySVG.push( this.createBar(i, this.array[i], this.bars, options ));
-            } else if (i == key) {
-                this.arraySVG.push( this.createBar(i, this.array[i], this.bars, { fill: 'yellow' }) );
+        for (let i = 0; i < this.state.bars; i++) {
+            if (array.includes(i) === true) {
+                this.arraySVG.push( this.createBar(i, this.array[i], this.state.bars, options ));
+            } else if (i === key) {
+                this.arraySVG.push( this.createBar(i, this.array[i], this.state.bars, { fill: 'yellow' }) );
             } else {
-                this.arraySVG.push( this.createBar(i, this.array[i], this.bars, { fill: 'red' } ));
+                this.arraySVG.push( this.createBar(i, this.array[i], this.state.bars, { fill: 'red' } ));
             }
         }
         this.setState({ arrayBars: this.arraySVG });
@@ -95,11 +140,11 @@ class Chart extends React.Component {
         this.array[first] = this.array[second];
         this.array[second] = temp;
         this.arraySVG = [];
-        for (let i = 0; i < this.bars; i++) {
-            if (i == first || i == second) {
-                this.arraySVG.push( this.createBar(i, this.array[i], this.bars, { fill: 'blue', roughness: 2.8 }) );
+        for (let i = 0; i < this.state.bars; i++) {
+            if (i === first || i === second) {
+                this.arraySVG.push( this.createBar(i, this.array[i], this.state.bars, { fill: 'blue', roughness: 2.8 }) );
             } else {
-                this.arraySVG.push( this.createBar(i, this.array[i], this.bars, { fill: 'red' }) );
+                this.arraySVG.push( this.createBar(i, this.array[i], this.state.bars, { fill: 'red' }) );
             }
         }
         this.setState({ arrayBars: this.arraySVG });
@@ -110,13 +155,13 @@ class Chart extends React.Component {
         this.array[first] = this.array[second];
         this.array[second] = temp;
         this.arraySVG = [];
-        for (let i = 0; i < this.bars; i++) {
-            if (i == first || i == second) {
-                this.arraySVG.push( this.createBar(i, this.array[i], this.bars, { fill: 'blue', roughness: 2.8 }) );
-            } else if (i == highlight) {
-                this.arraySVG.push( this.createBar(i, this.array[i], this.bars, { fill: 'yellow' }) );
+        for (let i = 0; i < this.state.bars; i++) {
+            if (i === first || i === second) {
+                this.arraySVG.push( this.createBar(i, this.array[i], this.state.bars, { fill: 'blue', roughness: 2.8 }) );
+            } else if (i === highlight) {
+                this.arraySVG.push( this.createBar(i, this.array[i], this.state.bars, { fill: 'yellow' }) );
             } else {
-                this.arraySVG.push( this.createBar(i, this.array[i], this.bars, { fill: 'red' }) );
+                this.arraySVG.push( this.createBar(i, this.array[i], this.state.bars, { fill: 'red' }) );
             }
         }
         this.setState({ arrayBars: this.arraySVG });
@@ -126,40 +171,40 @@ class Chart extends React.Component {
         instructions.push([0, 0, 'finish']);
         var step = 0;
         for (var i = 0; i < instructions.length; i++) {
-            setTimeout(() => {
-                if (instructions[step][2] == "swap") {
+            this.timeoutInstructions = setTimeout(() => {
+                if (instructions[step][2] === "swap") {
                     this.swapElements(instructions[step][0], instructions[step][1]);
-                } else if (instructions[step][2] == "highlight with key") {
+                } else if (instructions[step][2] === "highlight with key") {
                     this.highlightElementsSpecial([instructions[step][0][0], instructions[step][0][1]], instructions[step][1]);
-                } else if (instructions[step][2] == "highlight with green") {
+                } else if (instructions[step][2] === "highlight with green") {
                     this.highlightElementsSpecial([instructions[step][0][0], instructions[step][0][1]], instructions[step][1], { fill: 'black' });
-                } else if (instructions[step][2] == "swap and highlight") {
+                } else if (instructions[step][2] === "swap and highlight") {
                     this.swapAndHighlight(instructions[step][0][0], instructions[step][0][1], instructions[step][1]);
-                } else if (instructions[step][2] == "highlight before") {
+                } else if (instructions[step][2] === "highlight before") {
                     this.highlightElements(instructions[step][0], { fill: 'green' });
-                } else if (instructions[step][2] == "finish") {
-                    this.createGraph(this.array, this.bars, { fill: 'green', fillWeight: 2 });
+                } else if (instructions[step][2] === "finish") {
+                    this.createGraph(this.array, this.state.bars, { fill: 'green', fillWeight: 2 });
                     this.finished = true;
                     this.inProgress = false;
                     this.stopped = true;
                 }
                 step++;
-            }, this.velocity * i); 
+            }, this.state.velocity * i); 
         }
     }
 
     componentDidMount() {
-        for (let i = 0; i < this.bars; i++) { // adds initial randomized array set
+        for (let i = 0; i < this.state.bars; i++) { // adds initial randomized array set
             this.array.push(Math.random());
         }
-        this.createGraph(this.array, this.bars); // creates the initial graph
+        this.createGraph(this.array, this.state.bars); // creates the initial graph
         window.addEventListener('resize', () => { // resize function
-            if(this.finished == true) {
-                this.createGraph(this.array, this.bars, { fill: 'green', fillWeight: 2 });
-            } else if (this.stopped == true) {
-                this.createGraph(this.array, this.bars, { fill: 'black', fillStyle: 'cross-hatch', bowing: 4 });
+            if(this.finished === true) {
+                this.createGraph(this.array, this.state.bars, { fill: 'green', fillWeight: 2 });
+            } else if (this.stopped === true) {
+                this.createGraph(this.array, this.state.bars, { fill: 'black', fillStyle: 'cross-hatch', bowing: 4 });
             } else {
-                this.createGraph(this.array, this.bars);
+                this.createGraph(this.array, this.state.bars);
             }
         });
     }
@@ -177,7 +222,7 @@ class Chart extends React.Component {
         if (right < arrayLength && array[right] > array[max]) {
             max = right;
         }
-        if (max != i) {
+        if (max !== i) {
             var tmp = array[i];
             array[i] = array[max];
             array[max] = tmp;
@@ -202,7 +247,7 @@ class Chart extends React.Component {
             }
 
             var arrayLength = tmpArray.length; // 5
-            for (var i = Math.floor(arrayLength / 2); i >= 0; i--) { // builds a maxheap
+            for (i = Math.floor(arrayLength / 2); i >= 0; i--) { // builds a maxheap
                 this.maxHeap(tmpArray, i, arrayLength); // i = 2, 1, 0
             }
             for (i = tmpArray.length - 1; i > 0; i--) {
@@ -218,20 +263,20 @@ class Chart extends React.Component {
             this.instructions.push([0, 0, 'finish']);
 
             var step = 0;
-            for (var i = 0; i < this.instructions.length; i++) {
-                setTimeout(() => {
-                    if (this.instructions[step][2] == "swap") {
+            for (i = 0; i < this.instructions.length; i++) {
+                this.timeoutInstructions = setTimeout(() => {
+                    if (this.instructions[step][2] === "swap") {
                         this.swapElements(this.instructions[step][0], this.instructions[step][1]);
-                    } else if (this.instructions[step][2] == "highlight") {
+                    } else if (this.instructions[step][2] === "highlight") {
                         this.highlightElements([this.instructions[step][0], this.instructions[step][1]]);
-                    } else if (this.instructions[step][2] == "finish") {
-                        this.createGraph(this.array, this.bars, { fill: 'green', fillWeight: 2 });
+                    } else if (this.instructions[step][2] === "finish") {
+                        this.createGraph(this.array, this.state.bars, { fill: 'green', fillWeight: 2 });
                         this.finished = true;
                         this.inProgress = false;
                         this.stopped = true;
                     }
                     step++;
-                }, this.velocity * i); 
+                }, this.state.velocity * i); 
             }
         }
     }
@@ -251,7 +296,7 @@ class Chart extends React.Component {
                 tmpArray.push(this.array[i]);
             }
         
-            for (var i = 1; i < tmpArray.length; i++) {
+            for (i = 1; i < tmpArray.length; i++) {
                 var key = tmpArray[i];
                 var j = i - 1;
                 while (j >= 0 && key < tmpArray[j]) {
@@ -270,7 +315,7 @@ class Chart extends React.Component {
                 for (var x = j; x < i + 1; x++) {
                     highlight.push(x);
                 }
-                if (highlight.length == 1) highlight.push(j);
+                if (highlight.length === 1) highlight.push(j);
                 this.instructions.push([highlight, null, "highlight before"])
 
                 tmpArray[j + 1] = key;
@@ -292,7 +337,7 @@ class Chart extends React.Component {
             this.inProgress = true;
             this.stopped = false;
             var i = 0;
-            var barsCounter = this.bars - 2; // necessary for the logic of the bubble sort algo
+            var barsCounter = this.state.bars - 2; // necessary for the logic of the bubble sort algo
             this.intervalHighlighter = setInterval(() => { 
                 if (i > barsCounter) {
                     barsCounter--;
@@ -301,13 +346,13 @@ class Chart extends React.Component {
                 if (barsCounter < 0) { // function ends here
                     clearInterval(this.intervalHighlighter); // clears the hightlighter interval
                     clearInterval(this.intervalSwapper); // clears the swapper interval
-                    this.createGraph(this.array, this.bars, { fill: 'green', fillWeight: 2 });
+                    this.createGraph(this.array, this.state.bars, { fill: 'green', fillWeight: 2 });
                     this.inProgress = false;
                     this.finished = true;
                 } else {
                     this.highlightElements([i, i + 1]); // highlights everything else
                 }
-            }, this.velocity);
+            }, this.state.velocity);
             this.intervalSwapper = setInterval(() => {
                 if (this.array[i] > this.array[i + 1]) { // does the actual sort check
                     this.swapElements(i, i + 1);
@@ -315,7 +360,7 @@ class Chart extends React.Component {
                     this.highlightElements([i, i + 1], { fill: 'green' });
                 }
                 i++; // this needs to be at the end of the second interval for proper sequencing
-            }, this.velocity * 2); // the 2 is necessary for proper sequencing
+            }, this.state.velocity * 2); // the 2 is necessary for proper sequencing
         }
     }
 
@@ -396,19 +441,19 @@ class Chart extends React.Component {
     }
 
     randomizeArray() { 
-        if(this.inProgress == true && this.finished == false){
+        if(this.inProgress === true && this.finished === false){
             return;
         } else {
             let shuffledArray = [];
-            for (let i = 0; i < this.bars; i++) {
+            for (let i = 0; i < this.state.bars; i++) {
                 shuffledArray.push(i); // creates an array
             }
             this.array = [];
-            for (let i = 0; i < this.bars; i++) {
+            for (let i = 0; i < this.state.bars; i++) {
                 this.array.push(Math.random());
             }
             this.shuffleArray(shuffledArray).forEach( i => {
-                this.updateArray(i, this.createBar(i, this.array[i], this.bars, { fill: 'red' }));
+                this.updateArray(i, this.createBar(i, this.array[i], this.state.bars, { fill: 'red' }));
                 this.setState({ arrayBars: this.arraySVG });
             });
             this.finished = false;

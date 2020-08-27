@@ -3,38 +3,81 @@ import React from 'react';
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-  }
-  getButtonsUsingMap = () => {
-    var algos = ["Bubble Sort", "Selection Sort", "Insertion Sort", "Merge Sort", "Quick Sort", "Shell Sort", "Radix Sort", "Swap Sort", "Heap Sort"];  
-    return algos.map((number) => {
-      return <button key={number}>{number}</button>
-    })
+    this.algorithms = { 
+      title: [
+        "Heap sort",
+        "Merge sort",
+        "Insertion sort",
+        "Bubble sort"
+      ],
+      description: [
+        "Heap sort",
+        "Merge sort",
+        "Insertion sort",
+        "Bubble sort"
+      ]
+    }
+    this.state = {
+      selectedAlgo: "heap"
+    }
+    this.handleChange = this.handleChange.bind(this);
+    this.handleBarChange = this.handleBarChange.bind(this);
+    this.handleVelocityChange = this.handleVelocityChange.bind(this);
   }
 
+  handleChange(event) {
+    this.props.selectedAlgo( event.target.value )
+  }
+
+  handleBarChange = (event) => {
+    this.props.handleBarData( event.target.value )
+  }
+
+  handleVelocityChange = (event) => {
+    this.props.handleVelocityData( event.target.value )
+  }
+  
   render() {
     return (
       <div id="sectionLeft">
         <div id="dash">
-          <label htmlFor="randomizerAlgorithm">Choose a randomization method: </label>
-          <select id="randomizerAlgorithm" name="randomizerAlgorithm">
-              <option value="random">Random</option>
-              <option value="nearly">Nearly sorted</option>
-              <option value="reversed">Reversed</option>
-              <option value="nonunique">Few unique</option>
-          </select>
-          <button onClick={ this.props.onRandomize }>Randomize</button>
-          <button onClick={ this.props.bubbleSort }>Bubble sort</button>
-          <button onClick={ this.props.mergeSort }>Merge sort</button>
-          <button onClick={ this.props.heapSort }>Heap sort</button>
-          <button onClick={ this.props.insertionSort }>Insertion sort</button>
-          <br/>
-          <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-          <button onClick={ this.props.playAlgo }>Play</button>
-          <button onClick={ this.props.pauseAlgo }>Pause</button>
+          <div className="option">
+            <label htmlFor="randomizerAlgorithm">Choose a randomization method:</label>
+            <select id="randomizerAlgorithm" name="randomizerAlgorithm">
+                <option value="random">Random</option>
+                <option value="nearly">Nearly sorted</option>
+                <option value="reversed">Reversed</option>
+                <option value="nonunique">Few unique</option>
+            </select>
+            <button id="randomizebtn" onClick={ this.props.onRandomize }>Randomize</button>
+          </div>
+          <div className="option">
+            <label htmlFor="algorithm">Choose an algorithm:</label>
+            <select id="algorithm" value={ this.state.selectedOption } onChange={ this.handleChange }>
+              <option value={ "heap" }>Heap sort</option>
+              <option value={ "merge" }>Merge sort</option>
+              <option value={ "insertion" }>Insertion sort</option>
+              <option value={ "bubble" }>Bubble sort</option>
+            </select>
+          </div>
+          <div className="option">
+            <label htmlFor="bars">Bars</label>
+            <input onChange={ this.handleBarChange } type="range" id="bars" min={2} max={40} defaultValue={ "10" } className="slider" />
+          </div>
+          <div className="option">
+            <label htmlFor="velocity">Velocity</label>
+            <input onChange={ this.handleVelocityChange } type="range" id="velocity" min={ 50 } max={ 500 } defaultValue={ "200" } className="slider" />
+          </div>
+          <div className="option">
+            <button id="run" onClick={ this.props.runAlgo }>Do the thing</button>
+            <button onClick={ this.props.pauseAlgo }>Pause</button>
+          </div>
         </div>
         <div id="description">
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          <h4>{ this.algorithms.title[this.state.selectedAlgo] }</h4>
+          <p>{ this.algorithms.description[this.state.selectedAlgo] }</p>
         </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
       </div>
     )
   };

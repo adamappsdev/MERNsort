@@ -1,4 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Kalam");
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: "Kalam", cursive;
   color: navy;
@@ -7,16 +11,15 @@ body {
   background-size: 100% 1.2em;
   background-image: linear-gradient(0deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px), linear-gradient(#eee 0.05em, transparent 0.05em);
   behavior: url(/PIE.htc);
-  margin: 60px;
+  margin: 0;
 }
 
 nav {
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
-  height: 100px;
-  border-bottom: 1px solid #bbb;
-  margin-bottom: 20px;
+  background-color: ghostwhite;
+  padding: 20px 3%;
 }
 nav .nav-left a {
   color: navy;
@@ -31,16 +34,96 @@ nav .nav-right a {
 
 #sectionLeft {
   float: left;
-  width: 49%;
-  border-right: 1px solid #bbb;
+  width: 45.5%;
+  margin: 0 1.5% 0 3%;
+}
+#sectionLeft select, #sectionLeft input {
+  margin-bottom: 20px;
+  height: 30px;
+}
+#sectionLeft button {
+  height: 30px;
+}
+#sectionLeft #bars, #sectionLeft #velocity, #sectionLeft #algorithm {
+  width: 100%;
+}
+#sectionLeft .option:nth-of-type(1) {
+  display: flex;
+  flex-wrap: wrap;
+}
+#sectionLeft .option:nth-of-type(1) label {
+  width: 100%;
+}
+#sectionLeft .option:nth-of-type(1) #randomizerAlgorithm {
+  flex-grow: 6;
+}
+#sectionLeft .option:nth-of-type(1) button {
+  flex-grow: 1;
+  margin-left: 20px;
+  height: 30px;
+  background-color: orange;
+}
+#sectionLeft #run {
+  margin-right: 20px;
 }
 
 #sectionRight {
   float: right;
-  width: 49%;
+  width: 45.5%;
+  transform: rotate(-4deg);
+  background-color: #fdff70;
+  padding: 20px;
+  margin: 0 3% 0 1.5%;
+  position: relative;
+  min-height: 10em;
+  box-shadow: 7px 10px 34px -20px rgba(0, 0, 0, 0.5);
+}
+#sectionRight #graphSVG {
+  height: 400px;
 }
 #sectionRight svg {
   width: 100%;
+}
+#sectionRight:before {
+  content: "";
+  position: absolute;
+  bottom: -2em;
+  right: 0;
+  border-top: 2em solid #d3d600;
+  border-right: 2em solid transparent;
+}
+#sectionRight:after {
+  content: "";
+  position: absolute;
+  bottom: -2em;
+  left: 0;
+  right: 2em;
+  border-width: 1.1em;
+  border-style: solid;
+  border-color: #fdff70;
+}
+
+@media only screen and (max-width: 768px) {
+  #sectionLeft {
+    width: 100%;
+    padding: 0 20px;
+    width: 94%;
+  }
+
+  #sectionRight {
+    padding: 20px;
+    width: 94%;
+  }
+}
+@media only screen and (max-width: 540px) {
+  #sectionLeft #randomizerAlgorithm {
+    margin-bottom: 10px;
+  }
+  #sectionLeft #randomizebtn {
+    margin-bottom: 20px;
+    margin-left: 0;
+    width: 100%;
+  }
 }
 
 /*# sourceMappingURL=index.css.map */

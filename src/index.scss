@@ -7,6 +7,13 @@
 $primary-text-color: navy;
 $secondary-text-color: crimson;
 
+$margin: 3%;
+$padding: 20px;
+
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Kalam', cursive;
     color: $primary-text-color;
@@ -15,17 +22,15 @@ body {
     background-size: 100% 1.2em;
     $background-image-one: linear-gradient(0deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px), linear-gradient(#eee .05em, transparent .05em);
     background-image: $background-image-one; //radial-gradient(circle, #ccc 1px, rgba(0, 0, 0, 0) 1px);
-    /// background-size: 30px 30px;
-    // -pie-background: linear-gradient(0deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px) 0 0 / 100% 1.2em, linear-gradient(#eee .05em, transparent .05em) 0 0 / 100% 1.2em #fff;
     behavior: url(/PIE.htc);
-    margin: 60px;
+    margin: 0;
 }
 
 nav {
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
-    height: 100px;
+    background-color: ghostwhite;
     .nav-left a {
         color: $primary-text-color;
         font-size: 2em;
@@ -36,20 +41,104 @@ nav {
         margin-left: 40px;
         font-size: 1.5em;
     }
-    border-bottom: 1px solid #bbb;
-    margin-bottom: 20px;
+    padding: $padding $margin;
 }
 
 #sectionLeft {
     float: left;
-    width: 49%;
-    border-right: 1px solid #bbb;
+    width: 50% - $margin * 3 / 2;
+    margin: 0 $margin / 2 0 $margin;
+    select, input {
+        margin-bottom: $padding;
+        height: $padding * 3 / 2;
+    }
+    button {
+        height: $padding * 3 / 2;
+    }
+    #bars, #velocity, #algorithm {
+        width: 100%;
+    }
+    .option:nth-of-type(1){
+        display: flex;
+        flex-wrap: wrap;
+        label {
+            width: 100%;
+        }
+        #randomizerAlgorithm {
+            flex-grow: 6;
+        }
+        button {
+            flex-grow: 1;
+            margin-left: 20px;
+            height: $padding * 3 / 2;
+            background-color: orange;
+        }
+    }
+    #run {
+        margin-right: 20px;
+    }
 }
+
+$color: #fdff70;
+$colorDark: darken($color, 30%);
 
 #sectionRight {
     float: right;
-    width: 49%;
+    width: 50% - $margin * 3 / 2;
+    transform: rotate(-4deg);
+    background-color: $color;
+    #graphSVG {
+        height: 400px;
+    }
     svg {
         width: 100%;
+    }
+    padding: $padding;
+    margin: 0 $margin 0 $margin / 2;
+    position: relative;
+    min-height: 10em;
+    &:before {
+        content: "";
+        position: absolute;
+        bottom: -2em;
+        right: 0;
+        border-top: 2em solid $colorDark;
+        border-right: 2em solid transparent;
+    }
+    &:after {
+        content: "";
+        position: absolute;
+        bottom: -2em;
+        left: 0;
+        right: 2em;
+        border-width: 1.1em;
+        border-style: solid;
+        border-color: $color;
+    }
+    box-shadow: 7px 10px 34px -20px rgba(0,0,0,0.5);
+}
+
+@media only screen and (max-width: 768px) {
+    #sectionLeft {
+        width: 100%;
+        padding: 0 20px;
+        width: 100% - $margin * 2;
+    }
+    #sectionRight {
+        padding: 20px;
+        width: 100% - $margin * 2;
+    }
+}
+
+@media only screen and (max-width: 540px) {
+    #sectionLeft {
+        #randomizerAlgorithm {
+            margin-bottom: $padding / 2;
+        }
+        #randomizebtn {
+            margin-bottom: $padding;
+            margin-left: 0;
+            width: 100%;
+        }
     }
 }
